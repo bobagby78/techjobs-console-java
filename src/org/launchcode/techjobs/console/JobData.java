@@ -7,9 +7,7 @@ import org.apache.commons.csv.CSVRecord;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by LaunchCode
@@ -57,32 +55,60 @@ public class JobData {
     /**
      * Returns results of search the jobs data by key/value, using
      * inclusion of the search term.
-     *
+     * <p>
      * For example, searching for employer "Enterprise" will include results
      * with "Enterprise Holdings, Inc".
      *
-     * @param column   Column that should be searched.
-     * @param value Value of teh field to search for
+     * @param column Column that should be searched.
+     * @param value  Value of the field to search for
      * @return List of all jobs matching the criteria
      */
     public static ArrayList<HashMap<String, String>> findByColumnAndValue(String column, String value) {
 
         // load data, if not already loaded
+        loadData(); //pull the data from the csv file
+
+        ArrayList<HashMap<String, String>> jobs = new ArrayList<>(); // create a new ArrayList made of HashMaps in which KEYS are of type String and VALUES are of type String
+
+        for (HashMap<String, String> row : allJobs) { //loop through the HashMap, for each row in allJobs
+            String aValue = row.get(column).toLowerCase() ; // the String aValue is set as the row's column
+
+            if (aValue.contains(value.toLowerCase())) { // if aValue has value...
+                jobs.add(row);  //add the row to jobs
+
+            }
+
+        }
+        return jobs;  //kick out the jobs as the value of findByColumnAndValue
+    }
+
+    /*
+    this is starting as a copy of findByColumnAndValue. Instead of searching one column for a value, it should search ALL columns for a value.
+    loop through the Array list with a for jobs : alljobs Then nest an if (value in hashmap keys OR values { put put its row in allJobs)
+     */
+    public static ArrayList<HashMap<String, String>> findByValue(String value) {
+        // load data, if not already loaded
         loadData();
 
         ArrayList<HashMap<String, String>> jobs = new ArrayList<>();
 
-        for (HashMap<String, String> row : allJobs) {
+        for (HashMap<String, String> row : allJobs) { //loop through allJobs
 
-            String aValue = row.get(column);
+            for (Map.Entry<String, String> column : row.entrySet()){ //loop through all the columns to search for a value Map
 
-            if (aValue.contains(value)) {
-                jobs.add(row);
+                String rowKey = column.getKey().toLowerCase();
+                String rowValue = column.getValue().toLowerCase();
+                value = value.toLowerCase();
+
+                if (rowKey.contains(value) || rowValue.contains(value)) {
+                    jobs.add(row);
+                }
             }
-        }
 
+        }
         return jobs;
     }
+
 
     /**
      * Read in data from a CSV file and store it in a list

@@ -62,7 +62,8 @@ public class TechJobs {
                 String searchTerm = in.nextLine();
 
                 if (searchField.equals("all")) {
-                    System.out.println("Search all fields not yet implemented.");
+                    printJobs(JobData.findByValue(searchTerm));   //make this line look like the else statement below, but with findByValue
+                    System.out.println("all search prints here");
                 } else {
                     printJobs(JobData.findByColumnAndValue(searchField, searchTerm));
                 }
@@ -80,8 +81,8 @@ public class TechJobs {
         // Put the choices in an ordered structure so we can
         // associate an integer with each one
         Integer i = 0;
-        for (String choiceKey : choices.keySet()) {
-            choiceKeys[i] = choiceKey;
+        for (String choiceKey : choices.keySet()) { //looping through the possibilities in choices avail to the user
+            choiceKeys[i] = choiceKey;  //attaching the index of the user's choice to the index of the search options
             i++;
         }
 
